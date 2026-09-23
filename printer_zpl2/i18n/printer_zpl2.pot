@@ -4,7 +4,7 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 18.0\n"
+"Project-Id-Version: Odoo Server 19.0\n"
 "Report-Msgid-Bugs-To: \n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -975,7 +975,7 @@ msgstr ""
 #. module: printer_zpl2
 #. odoo-python
 #: code:addons/printer_zpl2/models/printing_label_zpl2.py:0
-msgid "This label cannot be used on {model}"
+msgid "This label cannot be used on %(model)s"
 msgstr ""
 
 #. module: printer_zpl2
