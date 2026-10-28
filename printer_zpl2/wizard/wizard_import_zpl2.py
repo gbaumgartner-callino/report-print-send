@@ -289,7 +289,8 @@ def _graphic_field(data):
 
         return {
             "component_type": "graphic",
-            "graphic_image": image,
+            # 20.0: binary fields reject bytes, a base64 string is accepted
+            "graphic_image": image.decode(),
             zpl2.ARG_WIDTH: width,
             zpl2.ARG_HEIGHT: height,
         }
@@ -345,7 +346,7 @@ class WizardImportZPl2(models.TransientModel):
     _description = "Import ZPL2"
 
     label_id = fields.Many2one(
-        comodel_name="printing.label.zpl2", string="Label", required=True, readonly=True
+        comodel_name="printing.label.zpl2", required=True, readonly=True
     )
     data = fields.Text(required=True, help="Printer used to print the labels.")
     delete_component = fields.Boolean(
@@ -373,7 +374,7 @@ class WizardImportZPl2(models.TransientModel):
 
             args = line.split("^")
             for arg in args:
-                for _key, code in SUPPORTED_CODE.items():
+                for code in SUPPORTED_CODE.values():
                     component_arg = code["method"](arg)
                     if component_arg:
                         if code.get("default", False):
@@ -404,7 +405,7 @@ class WizardImportZPl2(models.TransientModel):
                 Zpl2Component.create(vals)
 
     def _update_vals(self, vals):
-        if "orientation" in vals.keys() and vals["orientation"] == "":
+        if "orientation" in vals and vals["orientation"] == "":
             vals["orientation"] = "N"
 
         # Field
@@ -412,7 +413,7 @@ class WizardImportZPl2(models.TransientModel):
         model_fields = Zpl2Component.fields_get()
         component = {}
         for field, value in vals.items():
-            if field in model_fields.keys():
+            if field in model_fields:
                 field_type = model_fields[field].get("type", False)
                 if field_type == "boolean":
                     if not value or value == zpl2.BOOL_NO:

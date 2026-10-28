@@ -12,6 +12,7 @@ from PIL import Image, ImageOps
 
 from odoo import api, exceptions, fields, models
 from odoo.exceptions import ValidationError
+from odoo.tools.binary import BinaryBytes
 from odoo.tools.safe_eval import safe_eval, wrap_module
 
 from . import zpl2
@@ -29,7 +30,6 @@ class PrintingLabelZpl2(models.Model):
     description = fields.Char(help="Long description for this label.")
     model_id = fields.Many2one(
         comodel_name="ir.model",
-        string="Model",
         required=True,
         ondelete="cascade",
         help="Model used to print this label.",
@@ -70,7 +70,7 @@ class PrintingLabelZpl2(models.Model):
     test_labelary_mode = fields.Boolean(string="Mode Labelary")
     record_id = fields.Integer(string="Record ID", default=1)
     extra = fields.Text(default="{}")
-    printer_id = fields.Many2one(comodel_name="printing.printer", string="Printer")
+    printer_id = fields.Many2one(comodel_name="printing.printer")
     labelary_image = fields.Binary(
         string="Image from Labelary", compute="_compute_labelary_image"
     )
@@ -257,15 +257,15 @@ class PrintingLabelZpl2(models.Model):
                 )
             elif component.component_type == "graphic":
                 # During the on_change don't take the bin_size
-                image = (
-                    component.with_context(bin_size_graphic_image=False).graphic_image
-                    or data
-                )
+                # 20.0: binary fields return a BinaryValue with the raw bytes (no
+                # base64 anymore); `data` from the data field stays base64.
+                image = component.with_context(
+                    bin_size_graphic_image=False
+                ).graphic_image
                 try:
-                    pil_image = Image.open(io.BytesIO(base64.b64decode(image))).convert(
-                        "RGB"
-                    )
-                except Exception:
+                    raw = image.content if image else base64.b64decode(data)
+                    pil_image = Image.open(io.BytesIO(raw)).convert("RGB")
+                except Exception:  # noqa: BLE001, S112
                     continue
                 if component.width and component.height:
                     pil_image = pil_image.resize((component.width, component.height))
@@ -522,12 +522,13 @@ class PrintingLabelZpl2(models.Model):
                     new_im.paste(im, (1, 1))
                     imgByteArr = io.BytesIO()
                     new_im.save(imgByteArr, format="PNG")
-                    return base64.b64encode(imgByteArr.getvalue())
+                    # 20.0: binary fields no longer accept bytes
+                    return BinaryBytes(imgByteArr.getvalue())
                 else:
                     _logger.warning(
                         self.env._("Error with Labelary API. %s", response.status_code)
                     )
 
-            except Exception as e:
+            except Exception as e:  # noqa: BLE001
                 _logger.warning(self.env._("Error with Labelary API. %s", e))
         return False

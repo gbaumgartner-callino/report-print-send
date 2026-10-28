@@ -40,6 +40,7 @@ class TestWizardPrintRecordLabel(PrinterZpl2Common):
             {
                 "name": "Other_Printer",
                 "server_id": self.server.id,
+                "backend": "cups",
                 "system_name": "Sys Name",
                 "default": True,
                 "status": "unknown",

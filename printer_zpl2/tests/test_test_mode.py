@@ -60,7 +60,8 @@ class TestWizardPrintRecordLabel(PrinterZpl2Common):
     def test_emulation_without_params(self):
         """Check if not execute next if not in this mode"""
         self.label.test_labelary_mode = False
-        self.assertIs(self.label.labelary_image, False)
+        # 20.0: an empty binary field is an empty BinaryValue, not False
+        self.assertFalse(self.label.labelary_image)
 
     @patch(
         "odoo.addons.printer_zpl2.models.printing_label_zpl2.requests.post",
@@ -91,7 +92,8 @@ class TestWizardPrintRecordLabel(PrinterZpl2Common):
             {"name": "ZPL II Label", "label_id": self.label.id, "data": "wrong_data"}
         )
         component.unlink()
-        self.assertIs(self.label.labelary_image, False)
+        # 20.0: an empty binary field is an empty BinaryValue, not False
+        self.assertFalse(self.label.labelary_image)
 
     @patch(
         "odoo.addons.printer_zpl2.models.printing_label_zpl2.requests.post",

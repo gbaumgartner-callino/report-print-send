@@ -3,7 +3,7 @@
 
 {
     "name": "Printer ZPL II",
-    "version": "19.0.1.0.0",
+    "version": "20.0.1.0.0",
     "category": "Printer",
     "summary": "Add a ZPL II label printing feature",
     "author": "SUBTENO-IT, FLorent de Labarre, "
@@ -12,7 +12,7 @@
     "license": "AGPL-3",
     "depends": ["base_report_to_printer_cups"],
     "data": [
-        "security/ir.model.access.csv",
+        "security/ir.access.csv",
         "views/printing_label_zpl2.xml",
         "wizard/print_record_label.xml",
         "wizard/wizard_import_zpl2.xml",

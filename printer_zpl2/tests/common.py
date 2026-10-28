@@ -4,6 +4,13 @@ model = "odoo.addons.base_report_to_printer_cups.models.printing_server"
 
 
 class PrinterZpl2Common(BaseCommon):
+    # 20.0: BaseCommon runs as a dedicated test user (base.group_user only). The tests
+    # create labels, printers and actions -> admin and printing manager rights.
+    _test_user_groups = (
+        "base.group_system",
+        "base_report_to_printer.printing_group_manager",
+    )
+
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -14,6 +21,7 @@ class PrinterZpl2Common(BaseCommon):
             {
                 "name": "Printer",
                 "server_id": cls.server.id,
+                "backend": "cups",
                 "system_name": "Sys Name",
                 "default": True,
                 "status": "unknown",
