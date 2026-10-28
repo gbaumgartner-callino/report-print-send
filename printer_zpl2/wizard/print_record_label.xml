@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="UTF-8" ?>
 <!--
     Copyright 2016 SYLEAM
     License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
@@ -30,7 +30,7 @@
             </form>
         </field>
     </record>
-    <record model="ir.actions.act_window" id="action_wizard_print_record_label_view">
+    <record id="action_wizard_print_record_label_view" model="ir.actions.act_window">
         <field name="name">Print Label</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">wizard.print.record.label</field>

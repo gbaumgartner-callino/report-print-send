@@ -384,10 +384,10 @@ class WizardImportZPl2(models.TransientModel):
                         break
 
             if vals:
-                if "component_type" not in vals.keys():
+                if "component_type" not in vals:
                     vals.update({"component_type": "text"})
 
-                if vals["component_type"] in default.keys():
+                if vals["component_type"] in default:
                     vals.update(default[vals["component_type"]])
 
                 vals = self._update_vals(vals)

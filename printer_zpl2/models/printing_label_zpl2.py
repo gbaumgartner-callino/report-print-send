@@ -173,7 +173,7 @@ class PrintingLabelZpl2(models.Model):
             ):
                 printed_data = data
                 # Pick the right value if data is a collection
-                if isinstance(data, (list, tuple, set, models.BaseModel)):  # noqa: UP038
+                if isinstance(data, (list, tuple, set, models.BaseModel)):
                     # If we reached the end of data, quit the loop
                     if idx >= len(data):
                         break
@@ -192,7 +192,6 @@ class PrintingLabelZpl2(models.Model):
                 )
         return to_print
 
-    # flake8: noqa: C901
     def _generate_zpl2_components_data(
         self,
         label_data,
